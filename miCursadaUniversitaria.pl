@@ -4,12 +4,10 @@ load_test_files(tests.plt).
 %materia(Nombre,HorasTotalesCursada).
 %materia(phm,604).
 %materia(pdp,10).
-promocionable(pdp).
 correlativa(matematicaII,matematicaIII).
-
 promocionable(algoritmosI).
 promocionable(laboratorioDeComputacionI).
-promocionable(laboratorioDeComputacionII)
+promocionable(laboratorioDeComputacionII).
 promocionable(matematicaI).
 promocionable(matematicaII).
 promocionable(electricidadYMagnetismo).
@@ -19,8 +17,8 @@ promocionable(pdp).
 
 % materia(algoritmosI tiene que tener mas de 100 horas
 % materia(basesDeDatos, 120).
-Las materias iniciales de la carrera son: Matemática I, Laboratorio de Computación I, Electricidad y Magnetismo.
-Las materias totales necesarias para cursar Algoritmos I son: Matemática I y II, Laboratorio de Computación I y II, Sistemas de Procesamiento de Datos.
+%Las materias iniciales de la carrera son: Matemática I, Laboratorio de Computación I, Electricidad y Magnetismo.
+%Las materias totales necesarias para cursar Algoritmos I son: Matemática I y II, Laboratorio de Computación I y II, Sistemas de Pr%ocesamiento de Datos.
 
 %Las Materias
 
@@ -39,19 +37,24 @@ tieneNombreCorto(Nombre):-
 
  %forall(quiereIr(Persona, Destino), quedaEn(Destino, Zona)).
 
+esMateria(materia(matematicaII,30)). % hacer esto con todas
+esMateria(materia(matematicaI,10)). % hacer esto con todas
 
-materiaInicial(Materia):-
-	not(correlativa(Materia,_)).
+materiaInicial(Nombre):-
+	esMateria(materia(Nombre,_)),
+	not(esCorrelativaDe(Nombre,_)).
 
-materiasNecesariasParaCursar(Materia):-
-	correlativa(Materia,Materia2).
-materiasNecesariasParaCursar(Materia):-
-	correlativa(Materia,Materia2),
-	correlativa(Materia2,Materia3).
+esCorrelativaDe(matematicaII,matematicaI).
+esCorrelativaDe(matematicaIII,matematicaII).
+esCorrelativaDe(laboratorio2,matematicaI).
 
+materiasNecesariasParaCursar(Materia, Correlativa) :-
+  esCorrelativaDe(Materia, OtraMateria),
+  materiasNecesariasParaCursar(OtraMateria, Correlativa).
 
-				%ancestro(Persona, Ancestro):-
-				%	padre(Persona, Ancestro).
-				%ancestro(Persona, Ancestro):-
-				%	padre(Persona, Padre),
-				%	ancestro(Padre, Ancestro).
+materiasNecesariasParaCursar(Materia, Correlativa) :-
+  esCorrelativaDe(Materia, Correlativa).
+
+% Aca no juega la transitividad vieji
+materiasQueHabilita(Correlativa, Materia) :-
+  esCorrelativaDe(Materia, Correlativa).
