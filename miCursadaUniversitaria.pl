@@ -90,3 +90,9 @@ notaCursadaMayorALimite(Estudiante,Materia,Nota,Limite) :-
 	mayorIgual(Nota,Limite).
 
 mayorIgual(Nota,Limite) :- Nota >= Limite.
+
+materiasCursadasSinFinalRendido(Estudiante,Materia):-
+	curso(Estudiante,Materia),
+	not(aprobo(Estudiante,Materia)).
+	
+	
