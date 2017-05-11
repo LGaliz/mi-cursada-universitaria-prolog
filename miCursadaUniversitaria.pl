@@ -43,7 +43,7 @@ esMateria(materia(algoritmosI,160)).
 esMateria(materia(sistemasOperativos,96)).
 esMateria(materia(algoritmosII,160)).
 esMateria(materia(algoritmosIII,160)).
-esMateria(materia(redesLocal,128)).
+esMateria(materia(redesLocales,128)).
 esMateria(materia(metodosNumericos,80)).
 esMateria(materia(basesDeDatos,128)).
 esMateria(materia(seminarioDeProgramacion,64)).
@@ -56,8 +56,30 @@ materiaInicial(Nombre):-
 	not(esCorrelativaDe(Nombre,_)).
 
 esCorrelativaDe(matematicaII,matematicaI).
+esCorrelativaDe(matematicaII,electricidadYMagnetismo).
+esCorrelativaDe(laboratorioDeComputacionII,laboratorioDeComputacionI).
+esCorrelativaDe(spd,laboratorioDeComputacionI).
 esCorrelativaDe(matematicaIII,matematicaII).
-esCorrelativaDe(laboratorio2,matematicaI).
+esCorrelativaDe(matematicaIII,laboratorioDeComputacionII).
+esCorrelativaDe(algoritmosI,laboratorioDeComputacionII).
+esCorrelativaDe(algoritmosI,matematicaII).
+esCorrelativaDe(algoritmosI,spd).
+esCorrelativaDe(sistemasOperativos,laboratorioDeComputacionII).
+esCorrelativaDe(sistemasOperativos,spd).
+esCorrelativaDe(algoritmosII,matematicaIII).
+esCorrelativaDe(algoritmosII,algoritmosI).
+esCorrelativaDe(metodosNumericos,algoritmosI).
+esCorrelativaDe(redesLocales,sistemasOperativos).
+esCorrelativaDe(basesDeDatos,algoritmosII).
+esCorrelativaDe(algoritmosIII,algoritmosII).
+esCorrelativaDe(algoritmosIII,redesLocales).
+esCorrelativaDe(seminarioDeProgramacion,algoritmosII).
+esCorrelativaDe(seminarioDeProgramacion,metodosNumericos).
+esCorrelativaDe(seminarioDeProgramacion,redesLocales).
+esCorrelativaDe(proyectoDeSoftware,algoritmosIII).
+esCorrelativaDe(proyectoDeSoftware,basesDeDatos).
+esCorrelativaDe(phm,algoritmosIII).
+esCorrelativaDe(pdp,algoritmosIII).
 
 sonNecesariasParaCursar(Materia, Correlativa) :-
   esCorrelativaDe(Materia, OtraMateria),
