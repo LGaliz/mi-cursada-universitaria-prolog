@@ -1,9 +1,6 @@
 use_module(library(plunit)).
 load_test_files(tests.plt).
 %Base de Conocimiento
-%materia(Nombre,HorasTotalesCursada).
-%materia(phm,604).
-%materia(pdp,10).
 correlativa(matematicaII,matematicaIII).
 promocionable(algoritmosI).
 promocionable(laboratorioDeComputacionI).
@@ -35,8 +32,15 @@ tieneNombreCorto(Nombre):-
 	atom_length(Nombre,X),
 	X =< 15.
 
-esMateria(materia(matematicaII,30)). % hacer esto con todas
-esMateria(materia(matematicaI,10)). % hacer esto con todas
+
+esMateria(materia(matematicaII,96)). % hacer esto con todas
+esMateria(materia(matematicaI,96)). % hacer esto con todas
+esMateria(materia(matematicaIII,96)).
+esMateria(materia(laboratorioDeComputacionI,128)).
+esMateria(materia(laboratorioDeComputacionII,128)).
+esMateria(materia(electricidadYMagnetismo,128)).
+esMateria(materia(spd,128)).
+esMateria(materia(spd,128)).
 
 materiaInicial(Nombre):-
 	esMateria(materia(Nombre,_)),
