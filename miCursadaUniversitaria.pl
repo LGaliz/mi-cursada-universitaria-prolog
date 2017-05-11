@@ -40,7 +40,17 @@ esMateria(materia(laboratorioDeComputacionI,128)).
 esMateria(materia(laboratorioDeComputacionII,128)).
 esMateria(materia(electricidadYMagnetismo,128)).
 esMateria(materia(spd,128)).
-esMateria(materia(spd,128)).
+esMateria(materia(algoritmosI,160)).
+esMateria(materia(sistemasOperativos,96)).
+esMateria(materia(algoritmosII,160)).
+esMateria(materia(algoritmosIII,160)).
+esMateria(materia(redesLocal,128)).
+esMateria(materia(metodosNumericos,80)).
+esMateria(materia(basesDeDatos,128)).
+esMateria(materia(seminarioDeProgramacion,64)).
+esMateria(materia(phm,160)).
+esMateria(materia(proyectoDeSoftware,128)).
+esMateria(materia(pdp,64)).
 
 materiaInicial(Nombre):-
 	esMateria(materia(Nombre,_)),
@@ -62,7 +72,7 @@ materiasQueHabilita(Correlativa, Materia) :-
   esCorrelativaDe(Materia, Correlativa).
 
 
-				% Punto 3
+% Punto 3
 curso(Estudiante,Materia) :-
 	aproboCursada(Estudiante, Materia).
 
@@ -93,6 +103,6 @@ mayorIgual(Nota,Limite) :- Nota >= Limite.
 
 materiasCursadasSinFinalRendido(Estudiante,Materia):-
 	curso(Estudiante,Materia),
-	not(aprobo(Estudiante,Materia)).
+	not(aprobo(Estudiante,Materia)).add
 	
 	
