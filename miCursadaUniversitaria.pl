@@ -1,5 +1,5 @@
-use_module(library(plunit)).
-load_test_files(tests.plt).
+%use_module(library(plunit)).
+%load_test_files(tests.plt).
 
 %LAS MATERIAS
 
@@ -49,11 +49,11 @@ aprobo(Estudiante,Materia) :-
 
 %4-----------------------------------------
 aproboCursada(Estudiante, Materia) :-
-	notaCursadaMayorALimite(Estudiante,Materia,Nota,4).
+	notaCursadaMayorALimite(Estudiante,Materia,_,4).
 
 promociono(Estudiante,Materia) :-
 	promocionable(Materia),
-	notaCursadaMayorALimite(Estudiante,Materia,Nota,7).
+	notaCursadaMayorALimite(Estudiante,Materia,_,7).
 
 notaCursadaMayorALimite(Estudiante,Materia,Nota,Limite) :-
 	notaCursada(Estudiante, Materia, Nota),
@@ -144,6 +144,42 @@ promocionable(pdp).
 
 %6-----------------------------------------
 
+:- begin_tests(materias_pesadas).
+
+	test(algoritmosI_es_materia_Pesada):-
+	esPesada(materia(algoritmosI,160)).
+	
+	test(basesDeDatos_es_materia_Pesada):-
+	esPesada(materia(basesDeDatos,128)).
+	
+	test(metodosNumericos_NO_es_materia_Pesada,fail):-
+	esPesada(materia(metodosNumericos,80)).
+		
+:- end_tests(materias_pesadas).
+
+:- begin_tests(materias_iniciales).
+
+	test(matematicaI_es_materia_inicial):-
+	materiaInicial(matematicaI).
+	
+	test(laboratorioDeComputacionI_es_materia_inicial):-
+	materiaInicial(laboratorioDeComputacionI).
+	
+	test(electricidadYMagnetismo_es_materia_inicial):-
+	materiaInicial(electricidadYMagnetismo).
+		
+:- end_tests(materias_iniciales).
+
+:- begin_tests(materias_necesarias_para_cursar).
+
+	test(algoritmosI_requiere_matematicaIyII_laboratorioIyII_spd):-
+	sonNecesariasParaCursar(algoritmosI,matematicaI),
+	sonNecesariasParaCursar(algoritmosI,matematicaII),
+	sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionI),
+	sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionII),
+	sonNecesariasParaCursar(algoritmosI,spd).
+		
+:- end_tests(materias_necesarias_para_cursar).
 
 %7-----------------------------------------
 
