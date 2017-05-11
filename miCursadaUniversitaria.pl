@@ -35,8 +35,6 @@ tieneNombreCorto(Nombre):-
 	atom_length(Nombre,X),
 	X =< 15.
 
- %forall(quiereIr(Persona, Destino), quedaEn(Destino, Zona)).
-
 esMateria(materia(matematicaII,30)). % hacer esto con todas
 esMateria(materia(matematicaI,10)). % hacer esto con todas
 
@@ -58,3 +56,33 @@ materiasNecesariasParaCursar(Materia, Correlativa) :-
 % Aca no juega la transitividad vieji
 materiasQueHabilita(Correlativa, Materia) :-
   esCorrelativaDe(Materia, Correlativa).
+
+
+				% Punto 3
+curso(Estudiante,Materia) :-
+	aproboCursada(Estudiante, Materia).
+
+curso(Estudiante,Materia) :-
+	rindioLibre(Estudiante, Materia).
+
+aprobo(Estudiante,Materia) :-
+	aproboFinal(Estudiante, Materia).
+
+aprobo(Estudiante,Materia) :-
+	rindioLibre(Estudiante,Materia).
+
+aprobo(Estudiante,Materia) :-
+	promociono(Estudiante,Materia).
+
+aproboCursada(Estudiante, Materia) :-
+	notaCursadaMayorALimite(Estudiante,Materia,Nota,4).
+
+promociono(Estudiante,Materia) :-
+	promocionable(Materia),
+	notaCursadaMayorALimite(Estudiante,Materia,Nota,7).
+
+notaCursadaMayorALimite(Estudiante,Materia,Nota,Limite) :-
+	notaCursada(Estudiante, Materia, Nota),
+	mayorIgual(Nota,Limite).
+
+mayorIgual(Nota,Limite) :- Nota >= Limite.
