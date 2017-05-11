@@ -1,7 +1,6 @@
 use_module(library(plunit)).
 load_test_files(tests.plt).
 %Base de Conocimiento
-correlativa(matematicaII,matematicaIII).
 promocionable(algoritmosI).
 promocionable(laboratorioDeComputacionI).
 promocionable(laboratorioDeComputacionII).
@@ -60,11 +59,11 @@ esCorrelativaDe(matematicaII,matematicaI).
 esCorrelativaDe(matematicaIII,matematicaII).
 esCorrelativaDe(laboratorio2,matematicaI).
 
-materiasNecesariasParaCursar(Materia, Correlativa) :-
+sonNecesariasParaCursar(Materia, Correlativa) :-
   esCorrelativaDe(Materia, OtraMateria),
-  materiasNecesariasParaCursar(OtraMateria, Correlativa).
+  sonNecesariasParaCursar(OtraMateria, Correlativa).
 
-materiasNecesariasParaCursar(Materia, Correlativa) :-
+sonNecesariasParaCursar(Materia, Correlativa) :-
   esCorrelativaDe(Materia, Correlativa).
 
 % Aca no juega la transitividad vieji
@@ -101,8 +100,26 @@ notaCursadaMayorALimite(Estudiante,Materia,Nota,Limite) :-
 
 mayorIgual(Nota,Limite) :- Nota >= Limite.
 
-materiasCursadasSinFinalRendido(Estudiante,Materia):-
+debeElFinal(Estudiante,Materia):-
 	curso(Estudiante,Materia),
-	not(aprobo(Estudiante,Materia)).add
-	
-	
+	not(aprobo(Estudiante,Materia)).
+
+bloquea(Estudiante,Materia,OtraMateria) :-
+	sonNecesariasParaCursar(Materia, OtraMateria),
+	debeElFinal(Materia),
+	aproboCursada(Estudiante,OtraMateria).
+
+perdioPromocion(Estudiante,Materia) :-
+	promociono(Estudiante,Materia),
+	sonNecesariasParaCursar(Materia,OtraMateria),
+	debeElFinal(OtraMateria).
+
+estaAlDia(Estudiante) :-
+% ver si necesitamos un predicado generador
+	esEstudiante(Estudiante),
+	forall(curso(Estudiante,Materia), not(debeElFinal(Estudiante,Materia)).
+
+esEstudiante(Estudiante) :-
+	notaCursada(Estudiante,_,_).
+
+% ver lo de la nota cuando rinde libre
