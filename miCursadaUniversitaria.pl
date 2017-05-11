@@ -1,25 +1,9 @@
 use_module(library(plunit)).
 load_test_files(tests.plt).
-%Base de Conocimiento
-promocionable(algoritmosI).
-promocionable(laboratorioDeComputacionI).
-promocionable(laboratorioDeComputacionII).
-promocionable(matematicaI).
-promocionable(matematicaII).
-promocionable(electricidadYMagnetismo).
-promocionable(spd).
-promocionable(sistemasOperativos).
-promocionable(pdp).
 
-% materia(algoritmosI tiene que tener mas de 100 horas
-% materia(basesDeDatos, 120).
-%Las materias iniciales de la carrera son: Matemática I, Laboratorio de Computación I, Electricidad y Magnetismo.
-%Las materias totales necesarias para cursar Algoritmos I son: Matemática I y II, Laboratorio de Computación I y II, Sistemas de Pr%ocesamiento de Datos.
+%LAS MATERIAS
 
-%Las Materias
-
-%1-----------
-
+%1-----------------------------------------
 esPesada(materia(_,HorasTotales)):-
 	HorasTotales > 100.
 
@@ -31,69 +15,23 @@ tieneNombreCorto(Nombre):-
 	atom_length(Nombre,X),
 	X =< 15.
 
-
-esMateria(materia(matematicaII,96)). % hacer esto con todas
-esMateria(materia(matematicaI,96)). % hacer esto con todas
-esMateria(materia(matematicaIII,96)).
-esMateria(materia(laboratorioDeComputacionI,128)).
-esMateria(materia(laboratorioDeComputacionII,128)).
-esMateria(materia(electricidadYMagnetismo,128)).
-esMateria(materia(spd,128)).
-esMateria(materia(algoritmosI,160)).
-esMateria(materia(sistemasOperativos,96)).
-esMateria(materia(algoritmosII,160)).
-esMateria(materia(algoritmosIII,160)).
-esMateria(materia(redesLocales,128)).
-esMateria(materia(metodosNumericos,80)).
-esMateria(materia(basesDeDatos,128)).
-esMateria(materia(seminarioDeProgramacion,64)).
-esMateria(materia(phm,160)).
-esMateria(materia(proyectoDeSoftware,128)).
-esMateria(materia(pdp,64)).
-
+%2-----------------------------------------	
 materiaInicial(Nombre):-
 	esMateria(materia(Nombre,_)),
 	not(esCorrelativaDe(Nombre,_)).
 
-esCorrelativaDe(matematicaII,matematicaI).
-esCorrelativaDe(matematicaII,electricidadYMagnetismo).
-esCorrelativaDe(laboratorioDeComputacionII,laboratorioDeComputacionI).
-esCorrelativaDe(spd,laboratorioDeComputacionI).
-esCorrelativaDe(matematicaIII,matematicaII).
-esCorrelativaDe(matematicaIII,laboratorioDeComputacionII).
-esCorrelativaDe(algoritmosI,laboratorioDeComputacionII).
-esCorrelativaDe(algoritmosI,matematicaII).
-esCorrelativaDe(algoritmosI,spd).
-esCorrelativaDe(sistemasOperativos,laboratorioDeComputacionII).
-esCorrelativaDe(sistemasOperativos,spd).
-esCorrelativaDe(algoritmosII,matematicaIII).
-esCorrelativaDe(algoritmosII,algoritmosI).
-esCorrelativaDe(metodosNumericos,algoritmosI).
-esCorrelativaDe(redesLocales,sistemasOperativos).
-esCorrelativaDe(basesDeDatos,algoritmosII).
-esCorrelativaDe(algoritmosIII,algoritmosII).
-esCorrelativaDe(algoritmosIII,redesLocales).
-esCorrelativaDe(seminarioDeProgramacion,algoritmosII).
-esCorrelativaDe(seminarioDeProgramacion,metodosNumericos).
-esCorrelativaDe(seminarioDeProgramacion,redesLocales).
-esCorrelativaDe(proyectoDeSoftware,algoritmosIII).
-esCorrelativaDe(proyectoDeSoftware,basesDeDatos).
-esCorrelativaDe(phm,algoritmosIII).
-esCorrelativaDe(pdp,algoritmosIII).
-
 sonNecesariasParaCursar(Materia, Correlativa) :-
-  esCorrelativaDe(Materia, OtraMateria),
-  sonNecesariasParaCursar(OtraMateria, Correlativa).
-
+	esCorrelativaDe(Materia, OtraMateria),
+	sonNecesariasParaCursar(OtraMateria, Correlativa).
 sonNecesariasParaCursar(Materia, Correlativa) :-
-  esCorrelativaDe(Materia, Correlativa).
+	esCorrelativaDe(Materia, Correlativa).
 
-% Aca no juega la transitividad vieji
 materiasQueHabilita(Correlativa, Materia) :-
   esCorrelativaDe(Materia, Correlativa).
 
+%LOS ESTUDIANTES
 
-% Punto 3
+%3-----------------------------------------
 curso(Estudiante,Materia) :-
 	aproboCursada(Estudiante, Materia).
 
@@ -109,6 +47,7 @@ aprobo(Estudiante,Materia) :-
 aprobo(Estudiante,Materia) :-
 	promociono(Estudiante,Materia).
 
+%4-----------------------------------------
 aproboCursada(Estudiante, Materia) :-
 	notaCursadaMayorALimite(Estudiante,Materia,Nota,4).
 
@@ -145,3 +84,68 @@ esEstudiante(Estudiante) :-
 	notaCursada(Estudiante,_,_).
 
 % ver lo de la nota cuando rinde libre
+
+%CASOS DE PRUEBA
+
+%5-----------------------------------------
+
+esMateria(materia(matematicaII,96)).
+esMateria(materia(matematicaI,96)).
+esMateria(materia(matematicaIII,96)).
+esMateria(materia(laboratorioDeComputacionI,128)).
+esMateria(materia(laboratorioDeComputacionII,128)).
+esMateria(materia(electricidadYMagnetismo,128)).
+esMateria(materia(spd,128)).
+esMateria(materia(algoritmosI,160)).
+esMateria(materia(sistemasOperativos,96)).
+esMateria(materia(algoritmosII,160)).
+esMateria(materia(algoritmosIII,160)).
+esMateria(materia(redesLocales,128)).
+esMateria(materia(metodosNumericos,80)).
+esMateria(materia(basesDeDatos,128)).
+esMateria(materia(seminarioDeProgramacion,64)).
+esMateria(materia(phm,160)).
+esMateria(materia(proyectoDeSoftware,128)).
+esMateria(materia(pdp,64)).
+esCorrelativaDe(matematicaII,matematicaI).
+esCorrelativaDe(matematicaII,electricidadYMagnetismo).
+esCorrelativaDe(laboratorioDeComputacionII,laboratorioDeComputacionI).
+esCorrelativaDe(spd,laboratorioDeComputacionI).
+esCorrelativaDe(matematicaIII,matematicaII).
+esCorrelativaDe(matematicaIII,laboratorioDeComputacionII).
+esCorrelativaDe(algoritmosI,laboratorioDeComputacionII).
+esCorrelativaDe(algoritmosI,matematicaII).
+esCorrelativaDe(algoritmosI,spd).
+esCorrelativaDe(sistemasOperativos,laboratorioDeComputacionII).
+esCorrelativaDe(sistemasOperativos,spd).
+esCorrelativaDe(algoritmosII,matematicaIII).
+esCorrelativaDe(algoritmosII,algoritmosI).
+esCorrelativaDe(metodosNumericos,algoritmosI).
+esCorrelativaDe(redesLocales,sistemasOperativos).
+esCorrelativaDe(basesDeDatos,algoritmosII).
+esCorrelativaDe(algoritmosIII,algoritmosII).
+esCorrelativaDe(algoritmosIII,redesLocales).
+esCorrelativaDe(seminarioDeProgramacion,algoritmosII).
+esCorrelativaDe(seminarioDeProgramacion,metodosNumericos).
+esCorrelativaDe(seminarioDeProgramacion,redesLocales).
+esCorrelativaDe(proyectoDeSoftware,algoritmosIII).
+esCorrelativaDe(proyectoDeSoftware,basesDeDatos).
+esCorrelativaDe(phm,algoritmosIII).
+esCorrelativaDe(pdp,algoritmosIII).
+promocionable(algoritmosI).
+promocionable(laboratorioDeComputacionI).
+promocionable(laboratorioDeComputacionII).
+promocionable(matematicaI).
+promocionable(matematicaII).
+promocionable(electricidadYMagnetismo).
+promocionable(spd).
+promocionable(sistemasOperativos).
+promocionable(pdp).
+
+%6-----------------------------------------
+
+
+%7-----------------------------------------
+
+
+%8-----------------------------------------
