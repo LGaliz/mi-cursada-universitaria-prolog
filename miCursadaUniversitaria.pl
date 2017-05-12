@@ -1,8 +1,6 @@
 %use_module(library(plunit)).
 %load_test_files(tests.plt).
 
-%LAS MATERIAS
-
 %1-----------------------------------------
 esPesada(materia(_,HorasTotales)):-
 	HorasTotales > 100.
@@ -39,6 +37,7 @@ curso(Estudiante,Materia) :-
 	rindioLibre(Estudiante, Materia).
 
 rindioLibre(Estudiante,Materia) :-
+	not(aproboCursada(Estudiante,Materia)),
 	aproboFinal(Estudiante,Materia).
 
 aprobo(Estudiante,Materia) :-
@@ -52,43 +51,38 @@ aprobo(Estudiante,Materia) :-
 
 %4-----------------------------------------
 aproboCursada(Estudiante, Materia) :-
-	notaCursadaMayorALimite(Estudiante,Materia,_,4).
+	notaCursada(Estudiante, Materia, Nota),
+	notaAprobacion(Nota).
 
 promociono(Estudiante,Materia) :-
 	promocionable(Materia),
-	notaCursadaMayorALimite(Estudiante,Materia,_,7).
-
-notaCursadaMayorALimite(Estudiante,Materia,Nota,Limite) :-
 	notaCursada(Estudiante, Materia, Nota),
-	mayorIgual(Nota,Limite).
+	notaPromocion(Nota).
 
-mayorIgual(Nota,Limite) :- Nota >= Limite.
+notaPromocion(Nota) :- Nota >= 7.
+notaAprobacion(Nota) :- Nota >= 4.
 
 aproboFinal(Estudiante, Materia) :-
-	notaFinalMayorALimite(Estudiante,Materia,_,4).
+	notaFinal(Estudiante,Materia,Nota),
+	notaAprobacion(Nota).
 
-notaFinalMayorALimite(Estudiante,Materia,Nota,Limite) :-
-	notaFinal(Estudiante, Materia, Nota),
-	mayorIgual(Nota,Limite).
-
-debeElFinal(Estudiante,Materia):-
+debeElFinal(Estudiante,Materia) :-
 	curso(Estudiante,Materia),
 	not(aprobo(Estudiante,Materia)).
 
 bloquea(Estudiante,Materia,OtraMateria) :-
 	sonNecesariasParaCursar(Materia, OtraMateria),
-	debeElFinal(Materia),
+	debeElFinal(Estudiante,Materia),
 	aproboCursada(Estudiante,OtraMateria).
 
 perdioPromocion(Estudiante,Materia) :-
 	promociono(Estudiante,Materia),
 	sonNecesariasParaCursar(Materia,OtraMateria),
-	debeElFinal(OtraMateria).
+	debeElFinal(Estudiante,OtraMateria).
 
 estaAlDia(Estudiante) :-
-% ver si necesitamos un predicado generador
-	esEstudiante(Estudiante),
-	forall(curso(Estudiante,Materia), not(debeElFinal(Estudiante,Materia)).
+  	esEstudiante(Estudiante),
+	forall(curso(Estudiante,Materia), not(debeElFinal(Estudiante,Materia))).
 
 esEstudiante(Estudiante) :-
 	notaCursada(Estudiante,_,_).
@@ -116,7 +110,7 @@ esMateria(materia(phm,160)).
 esMateria(materia(proyectoDeSoftware,128)).
 esMateria(materia(pdp,64)).
 esCorrelativaDe(matematicaII,matematicaI).
-esCorrelativaDe(matematicaII,electricidadYMagnetismo).
+esCorrelativaDe(matematicaII,laboratorioDeComputacionI).
 esCorrelativaDe(laboratorioDeComputacionII,laboratorioDeComputacionI).
 esCorrelativaDe(spd,laboratorioDeComputacionI).
 esCorrelativaDe(matematicaIII,matematicaII).
@@ -154,33 +148,33 @@ promocionable(pdp).
 
 :- begin_tests(materias_pesadas).
 
-	test(algoritmosI_es_materia_Pesada):-
+	test(algoritmosI_es_materia_Pesada, nondet) :-
 	esPesada(materia(algoritmosI,160)).
 
-	test(basesDeDatos_es_materia_Pesada):-
+	test(basesDeDatos_es_materia_Pesada, nondet) :-
 	esPesada(materia(basesDeDatos,128)).
 
-	test(metodosNumericos_NO_es_materia_Pesada,fail):-
+	test(metodosNumericos_NO_es_materia_Pesada,fail) :-
 	esPesada(materia(metodosNumericos,80)).
 
 :- end_tests(materias_pesadas).
 
 :- begin_tests(materias_iniciales).
 
-	test(matematicaI_es_materia_inicial):-
+	test(matematicaI_es_materia_inicial, nondet) :-
 	materiaInicial(matematicaI).
 
-	test(laboratorioDeComputacionI_es_materia_inicial):-
+	test(laboratorioDeComputacionI_es_materia_inicial, nondet) :-
 	materiaInicial(laboratorioDeComputacionI).
 
-	test(electricidadYMagnetismo_es_materia_inicial):-
+	test(electricidadYMagnetismo_es_materia_inicial, nondet) :-
 	materiaInicial(electricidadYMagnetismo).
 
 :- end_tests(materias_iniciales).
 
 :- begin_tests(materias_necesarias_para_cursar).
 
-	test(algoritmosI_requiere_matematicaIyII_laboratorioIyII_spd):-
+	test(algoritmosI_requiere_matematicaIyII_laboratorioIyII_spd, nondet) :-
 	sonNecesariasParaCursar(algoritmosI,matematicaI),
 	sonNecesariasParaCursar(algoritmosI,matematicaII),
 	sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionI),
@@ -190,6 +184,41 @@ promocionable(pdp).
 :- end_tests(materias_necesarias_para_cursar).
 
 %7-----------------------------------------
+notaCursada(pepo,electricidadYMagnetismo,8).
+notaCursada(pepo,matematicaI,8).
+notaCursada(pepo,laboratorioDeComputacionI,8).
 
+notaCursada(pepo,laboratorioDeComputacionII, 5).
+notaCursada(pepo,matematicaII, 6).
+notaCursada(pepo,matematicaIII, 4).
+
+notaFinal(pepo,matematicaII,4).
+notaFinal(pepo,laboratorioDeComputacionII,2).
+notaFinal(pepo,spd,6).
 
 %8-----------------------------------------
+:- begin_tests(pepo).
+
+test(aprobo_labo2_pepo, fail):-
+	aprobo(pepo,laboratorioDeComputacionII).
+
+test(aprobo_mateI_pepo, nondet):-
+	aprobo(pepo,matematicaI).
+
+test(aprobo_mateII_pepo, nondet):-
+	aprobo(pepo,matematicaII).
+
+test(aprobo_electricidad_pepo, nondet):-
+	aprobo(pepo,electricidadYMagnetismo).
+
+test(aprobo_spd_pepo, nondet):-
+	aprobo(pepo,spd).
+
+test(no_esta_al_dia_pepo, fail):-
+	estaAlDia(pepo).
+
+test(bloquea_labo2_a_mate3,
+     set(Materia == [laboratorioDeComputacionII])):-
+	bloquea(pepo,matematicaIII,Materia).
+
+:- end_tests(pepo).
