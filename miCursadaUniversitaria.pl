@@ -21,6 +21,7 @@ materiaInicial(Nombre):-
 sonNecesariasParaCursar(Materia, Correlativa) :-
 	esCorrelativaDe(Materia, OtraMateria),
 	sonNecesariasParaCursar(OtraMateria, Correlativa).
+
 sonNecesariasParaCursar(Materia, Correlativa) :-
 	esCorrelativaDe(Materia, Correlativa).
 
@@ -72,8 +73,8 @@ debeElFinal(Estudiante,Materia) :-
 
 bloquea(Estudiante,Materia,OtraMateria) :-
 	sonNecesariasParaCursar(Materia, OtraMateria),
-	debeElFinal(Estudiante,Materia),
-	aproboCursada(Estudiante,OtraMateria).
+	debeElFinal(Estudiante,OtraMateria),
+	aproboCursada(Estudiante,Materia).
 
 perdioPromocion(Estudiante,Materia) :-
 	promociono(Estudiante,Materia),
@@ -91,6 +92,7 @@ esEstudiante(Estudiante) :-
 
 %5-----------------------------------------
 
+% FIXME: esMateria se usa?
 esMateria(materia(matematicaII,96)).
 esMateria(materia(matematicaI,96)).
 esMateria(materia(matematicaIII,96)).
@@ -148,38 +150,38 @@ promocionable(pdp).
 
 :- begin_tests(materias_pesadas).
 
-	test(algoritmosI_es_materia_Pesada, nondet) :-
-	esPesada(materia(algoritmosI,160)).
+test(algoritmosI_es_materia_Pesada, nondet) :-
+esPesada(materia(algoritmosI,160)).
 
-	test(basesDeDatos_es_materia_Pesada, nondet) :-
-	esPesada(materia(basesDeDatos,128)).
+test(basesDeDatos_es_materia_Pesada, nondet) :-
+esPesada(materia(basesDeDatos,128)).
 
-	test(metodosNumericos_NO_es_materia_Pesada,fail) :-
-	esPesada(materia(metodosNumericos,80)).
+test(metodosNumericos_NO_es_materia_Pesada,fail) :-
+esPesada(materia(metodosNumericos,80)).
 
 :- end_tests(materias_pesadas).
 
 :- begin_tests(materias_iniciales).
 
-	test(matematicaI_es_materia_inicial, nondet) :-
-	materiaInicial(matematicaI).
+test(matematicaI_es_materia_inicial, nondet) :-
+materiaInicial(matematicaI).
 
-	test(laboratorioDeComputacionI_es_materia_inicial, nondet) :-
-	materiaInicial(laboratorioDeComputacionI).
+test(laboratorioDeComputacionI_es_materia_inicial, nondet) :-
+materiaInicial(laboratorioDeComputacionI).
 
-	test(electricidadYMagnetismo_es_materia_inicial, nondet) :-
-	materiaInicial(electricidadYMagnetismo).
+test(electricidadYMagnetismo_es_materia_inicial, nondet) :-
+materiaInicial(electricidadYMagnetismo).
 
 :- end_tests(materias_iniciales).
 
 :- begin_tests(materias_necesarias_para_cursar).
 
-	test(algoritmosI_requiere_matematicaIyII_laboratorioIyII_spd, nondet) :-
-	sonNecesariasParaCursar(algoritmosI,matematicaI),
-	sonNecesariasParaCursar(algoritmosI,matematicaII),
-	sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionI),
-	sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionII),
-	sonNecesariasParaCursar(algoritmosI,spd).
+test(algoritmosI_requiere_matematicaIyII_laboratorioIyII_spd, nondet) :-
+sonNecesariasParaCursar(algoritmosI,matematicaI),
+sonNecesariasParaCursar(algoritmosI,matematicaII),
+sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionI),
+sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionII),
+sonNecesariasParaCursar(algoritmosI,spd).
 
 :- end_tests(materias_necesarias_para_cursar).
 
