@@ -217,6 +217,9 @@ test(aprobo_spd_pepo, nondet):-
 test(no_esta_al_dia_pepo, fail):-
 	estaAlDia(pepo).
 
+test(perdio_promocion_pepo, fail):-
+	perdioPromocion(pepo,_).
+
 test(bloquea_labo2_a_mate3,
      set(Materia == [laboratorioDeComputacionII])):-
 	bloquea(pepo,matematicaIII,Materia).
