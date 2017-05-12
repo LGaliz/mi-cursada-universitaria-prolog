@@ -15,7 +15,7 @@ tieneNombreCorto(Nombre):-
 	atom_length(Nombre,X),
 	X =< 15.
 
-%2-----------------------------------------	
+%2-----------------------------------------
 materiaInicial(Nombre):-
 	esMateria(materia(Nombre,_)),
 	not(esCorrelativaDe(Nombre,_)).
@@ -27,7 +27,7 @@ sonNecesariasParaCursar(Materia, Correlativa) :-
 	esCorrelativaDe(Materia, Correlativa).
 
 materiasQueHabilita(Correlativa, Materia) :-
-  esCorrelativaDe(Materia, Correlativa).
+	sonNecesariasParaCursar(Materia,Correlativa).
 
 %LOS ESTUDIANTES
 
@@ -37,6 +37,9 @@ curso(Estudiante,Materia) :-
 
 curso(Estudiante,Materia) :-
 	rindioLibre(Estudiante, Materia).
+
+rindioLibre(Estudiante,Materia) :-
+	aproboFinal(Estudiante,Materia).
 
 aprobo(Estudiante,Materia) :-
 	aproboFinal(Estudiante, Materia).
@@ -61,6 +64,13 @@ notaCursadaMayorALimite(Estudiante,Materia,Nota,Limite) :-
 
 mayorIgual(Nota,Limite) :- Nota >= Limite.
 
+aproboFinal(Estudiante, Materia) :-
+	notaFinalMayorALimite(Estudiante,Materia,_,4).
+
+notaFinalMayorALimite(Estudiante,Materia,Nota,Limite) :-
+	notaFinal(Estudiante, Materia, Nota),
+	mayorIgual(Nota,Limite).
+
 debeElFinal(Estudiante,Materia):-
 	curso(Estudiante,Materia),
 	not(aprobo(Estudiante,Materia)).
@@ -82,8 +92,6 @@ estaAlDia(Estudiante) :-
 
 esEstudiante(Estudiante) :-
 	notaCursada(Estudiante,_,_).
-
-% ver lo de la nota cuando rinde libre
 
 %CASOS DE PRUEBA
 
@@ -148,26 +156,26 @@ promocionable(pdp).
 
 	test(algoritmosI_es_materia_Pesada):-
 	esPesada(materia(algoritmosI,160)).
-	
+
 	test(basesDeDatos_es_materia_Pesada):-
 	esPesada(materia(basesDeDatos,128)).
-	
+
 	test(metodosNumericos_NO_es_materia_Pesada,fail):-
 	esPesada(materia(metodosNumericos,80)).
-		
+
 :- end_tests(materias_pesadas).
 
 :- begin_tests(materias_iniciales).
 
 	test(matematicaI_es_materia_inicial):-
 	materiaInicial(matematicaI).
-	
+
 	test(laboratorioDeComputacionI_es_materia_inicial):-
 	materiaInicial(laboratorioDeComputacionI).
-	
+
 	test(electricidadYMagnetismo_es_materia_inicial):-
 	materiaInicial(electricidadYMagnetismo).
-		
+
 :- end_tests(materias_iniciales).
 
 :- begin_tests(materias_necesarias_para_cursar).
@@ -178,7 +186,7 @@ promocionable(pdp).
 	sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionI),
 	sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionII),
 	sonNecesariasParaCursar(algoritmosI,spd).
-		
+
 :- end_tests(materias_necesarias_para_cursar).
 
 %7-----------------------------------------
