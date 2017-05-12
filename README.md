@@ -2,9 +2,9 @@
 
 ## Materia: Paradigmas de Programación
 
-### Paradigma: Funcional
+### Paradigma: Lógico
 
-### Lenguaje: Haskell
+### Lenguaje: Prolog
 
 ### Codeado en: Emacs y Sublime
 
