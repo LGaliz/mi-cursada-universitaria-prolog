@@ -1,6 +1,3 @@
-%use_module(library(plunit)).
-%load_test_files(tests.plt).
-
 %1-----------------------------------------
 esPesada(materia(_,HorasTotales)):-
 	HorasTotales > 100.
@@ -27,8 +24,6 @@ sonNecesariasParaCursar(Materia, Correlativa) :-
 
 materiasQueHabilita(Correlativa, Materia) :-
 	sonNecesariasParaCursar(Materia,Correlativa).
-
-%LOS ESTUDIANTES
 
 %3-----------------------------------------
 curso(Estudiante,Materia) :-
