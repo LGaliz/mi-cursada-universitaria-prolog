@@ -38,8 +38,8 @@ curso(Estudiante,Materia) :-
 	rindioLibre(Estudiante, Materia).
 
 rindioLibre(Estudiante,Materia) :-
-	not(aproboCursada(Estudiante,Materia)),
-	aproboFinal(Estudiante,Materia).
+	aproboFinal(Estudiante,Materia),
+	not(aproboCursada(Estudiante,Materia)).
 
 aprobo(Estudiante,Materia) :-
 	aproboFinal(Estudiante, Materia).
