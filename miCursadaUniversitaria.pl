@@ -240,10 +240,10 @@ test(no_recurso_niguna_materia, fail):-
 puedeCursar(Estudiante,Materia):-
 	esMateria(materia(Materia,_)),
 	not(curso(Estudiante,Materia)),
+	cursoTodasLasMateriasParaCursar(Materia,Estudiante),
 	regimenCorrelativas(Estudiante,Materia).
 	
 regimenCorrelativas(Estudiante,Materia):-
-	%cursoTodasLasMateriasParaCursar(Materia,Estudiante),
 	aprobadasComoMinimoElSegundoNivelDeCorrelativas(Materia,Estudiante).
 	
 cursoTodasLasMateriasParaCursar(Materia,Estudiante):-
@@ -301,6 +301,5 @@ fechaDeCursada(lescano,electricidadYMagnetismo,verano(febrero,2014),2013).
 notaCursada(lescano,electricidadYMagnetismo,9).
 
 		
-	
 	
 	
