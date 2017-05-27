@@ -220,12 +220,23 @@ test(bloquea_labo2_a_mate3,
      set(Materia == [laboratorioDeComputacionII])):-
 	bloquea(pepo,matematicaIII,Materia).
 
+test(solo_puede_cursar_algoritmosI, nondet):-
+	 puedeCursar(pepo,algoritmosI).
+
+test(solo_puede_cursar_sistemasOperativos, nondet):-
+	 puedeCursar(pepo,sistemasOperativos).
+
+test(no_recurso_niguna_materia, fail):-
+	materiasRecursadas(pepo,Materia).
+
+
+	 
 :- end_tests(pepo).
 
 %------------------------------------------------------------------------
 %------------------------------------------------------------------------
 %Parte2
-%1
+%1 Futuras cursadas
 puedeCursar(Estudiante,Materia):-
 	esMateria(materia(Materia,_)),
 	not(curso(Estudiante,Materia)),
@@ -246,20 +257,50 @@ esMateriaDeSegundoNivel(Materia,MateriaSegundoNivel):-
 	esCorrelativaDe(CorrelativaPrimerNivel, MateriaSegundoNivel),
 	CorrelativaPrimerNivel \= MateriaSegundoNivel.
 
-%2
+%2 Los cuatrimestres
 enQueCuatrimestreCurso(Estudiante,Materia,Cuatrimestre,Anio):-
 	fechaDeCursada(Estudiante,Materia,Cuatrimestre,Anio).
+
+materiasRecursadas(Estudiante,Materia):-
+		enQueCuatrimestreCurso(Estudiante,Materia,Temporalidad,Anio),
+		enQueCuatrimestreCurso(Estudiante,OtraMateria,OtraTemporalidad,OtroAnio),
+		Materia==OtraMateria,
+		momentosDistintos(Temporalidad,OtraTemporalidad,Anio,OtroAnio).
+
+momentosDistintos(Temporalidad,OtraTemporalidad,Anio,OtroAnio):-
+	Temporalidad \= OtraTemporalidad.
+momentosDistintos(Temporalidad,OtraTemporalidad,Anio,OtroAnio):-
+	Anio \= OtroAnio.	
+	
+%3 Reformas en el plan
+
+%pinta functores aca
+
+%4 Perfiles de estudiantes
+
+
 
 %7-----------------------------------------
 
 %fechaDeCursada(Estudiante,Materia,Cuatrimestre,Anio).
+%fechaDeCursada(Estudiante,Materia,anual,Anio).
+%fechaDeCursada(Estudiante,Materia,verano(Mes,AnioCalendario),Anio).
+
 fechaDeCursada(pepo,electricidadYMagnetismo,primerCuatrimestre,2012).
 fechaDeCursada(pepo,matematicaI,primerCuatrimestre,2012).
 fechaDeCursada(pepo,laboratorioDeComputacionI,primerCuatrimestre,2012).
 fechaDeCursada(pepo,laboratorioDeComputacionII,segundoCuatrimestre,2012).
-fechaDeCursada(pepo,matematicaIII,primerCuatrimestre,2013).
-fechaDeCursada(pepo,matematicaIII,segundoCuatrimestre,2013).
-	
+fechaDeCursada(pepo,matematicaIII,anual,2013).
+
+%9------------------------------------------
+fechaDeCursada(lescano,matematicaI,primerCuatrimestre,2013).
+notaCursada(lescano,matematicaI,8).	
+fechaDeCursada(lescano,laboratorioDeComputacionI,segundoCuatrimestre,2013).
+notaCursada(lescano,laboratorioDeComputacionI,10).
+fechaDeCursada(lescano,electricidadYMagnetismo,verano(febrero,2014),2013).
+notaCursada(lescano,electricidadYMagnetismo,9).
+
+		
 	
 	
 	
