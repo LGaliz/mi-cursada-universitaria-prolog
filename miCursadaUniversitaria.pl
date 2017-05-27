@@ -87,7 +87,6 @@ esEstudiante(Estudiante) :-
 
 %5-----------------------------------------
 
-% FIXME: esMateria se usa?
 esMateria(materia(matematicaII,96)).
 esMateria(materia(matematicaI,96)).
 esMateria(materia(matematicaIII,96)).
@@ -222,3 +221,45 @@ test(bloquea_labo2_a_mate3,
 	bloquea(pepo,matematicaIII,Materia).
 
 :- end_tests(pepo).
+
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
+%Parte2
+%1
+puedeCursar(Estudiante,Materia):-
+	esMateria(materia(Materia,_)),
+	not(curso(Estudiante,Materia)),
+	regimenCorrelativas(Estudiante,Materia).
+	
+regimenCorrelativas(Estudiante,Materia):-
+	%cursoTodasLasMateriasParaCursar(Materia,Estudiante),
+	aprobadasComoMinimoElSegundoNivelDeCorrelativas(Materia,Estudiante).
+	
+cursoTodasLasMateriasParaCursar(Materia,Estudiante):-
+		forall(sonNecesariasParaCursar(Materia,Correlativa),curso(Estudiante,Correlativa)).
+
+aprobadasComoMinimoElSegundoNivelDeCorrelativas(Materia,Estudiante):-
+		forall(esMateriaDeSegundoNivel(Materia, MateriaSegundoNivel),aprobo(Estudiante,MateriaSegundoNivel)).
+	
+esMateriaDeSegundoNivel(Materia,MateriaSegundoNivel):-
+	esCorrelativaDe(Materia, CorrelativaPrimerNivel),
+	esCorrelativaDe(CorrelativaPrimerNivel, MateriaSegundoNivel),
+	CorrelativaPrimerNivel \= MateriaSegundoNivel.
+
+%2
+enQueCuatrimestreCurso(Estudiante,Materia,Cuatrimestre,Anio):-
+	fechaDeCursada(Estudiante,Materia,Cuatrimestre,Anio).
+
+%7-----------------------------------------
+
+%fechaDeCursada(Estudiante,Materia,Cuatrimestre,Anio).
+fechaDeCursada(pepo,electricidadYMagnetismo,primerCuatrimestre,2012).
+fechaDeCursada(pepo,matematicaI,primerCuatrimestre,2012).
+fechaDeCursada(pepo,laboratorioDeComputacionI,primerCuatrimestre,2012).
+fechaDeCursada(pepo,laboratorioDeComputacionII,segundoCuatrimestre,2012).
+fechaDeCursada(pepo,matematicaIII,primerCuatrimestre,2013).
+fechaDeCursada(pepo,matematicaIII,segundoCuatrimestre,2013).
+	
+	
+	
+	
