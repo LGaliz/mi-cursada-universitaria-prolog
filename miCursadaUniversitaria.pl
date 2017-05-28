@@ -1,4 +1,4 @@
-%1-----------------------------------------
+%1 Parte1----------------------------------
 esPesada(materia(_,HorasTotales)):-
 	HorasTotales > 100.
 
@@ -10,7 +10,7 @@ tieneNombreCorto(Nombre):-
 	atom_length(Nombre,X),
 	X =< 15.
 
-%2-----------------------------------------
+%2 Parte1----------------------------------
 materiaInicial(Nombre):-
 	esMateria(materia(Nombre,_)),
 	not(esCorrelativaDe(Nombre,_)).
@@ -25,7 +25,7 @@ sonNecesariasParaCursar(Materia, Correlativa) :-
 materiasQueHabilita(Correlativa, Materia) :-
 	sonNecesariasParaCursar(Materia,Correlativa).
 
-%3-----------------------------------------
+%3 Parte1----------------------------------
 curso(Estudiante,Materia) :-
 	aproboCursada(Estudiante, Materia).
 
@@ -45,7 +45,7 @@ aprobo(Estudiante,Materia) :-
 aprobo(Estudiante,Materia) :-
 	promociono(Estudiante,Materia).
 
-%4-----------------------------------------
+%4 Parte1----------------------------------
 aproboCursada(Estudiante, Materia) :-
 	notaCursada(Estudiante, Materia, Nota),
 	notaAprobacion(Nota).
@@ -83,10 +83,7 @@ estaAlDia(Estudiante) :-
 esEstudiante(Estudiante) :-
 	notaCursada(Estudiante,_,_).
 
-%CASOS DE PRUEBA
-
-%5-----------------------------------------
-
+%5 Parte1----------------------------------
 esMateria(materia(matematicaII,96)).
 esMateria(materia(matematicaI,96)).
 esMateria(materia(matematicaIII,96)).
@@ -140,103 +137,30 @@ promocionable(spd).
 promocionable(sistemasOperativos).
 promocionable(pdp).
 
-%6-----------------------------------------
-
-:- begin_tests(materias_pesadas).
-
-test(algoritmosI_es_materia_Pesada, nondet) :-
-esPesada(materia(algoritmosI,160)).
-
-test(basesDeDatos_es_materia_Pesada, nondet) :-
-esPesada(materia(basesDeDatos,128)).
-
-test(metodosNumericos_NO_es_materia_Pesada,fail) :-
-esPesada(materia(metodosNumericos,80)).
-
-:- end_tests(materias_pesadas).
-
-:- begin_tests(materias_iniciales).
-
-test(matematicaI_es_materia_inicial, nondet) :-
-materiaInicial(matematicaI).
-
-test(laboratorioDeComputacionI_es_materia_inicial, nondet) :-
-materiaInicial(laboratorioDeComputacionI).
-
-test(electricidadYMagnetismo_es_materia_inicial, nondet) :-
-materiaInicial(electricidadYMagnetismo).
-
-:- end_tests(materias_iniciales).
-
-:- begin_tests(materias_necesarias_para_cursar).
-
-test(algoritmosI_requiere_matematicaIyII_laboratorioIyII_spd, nondet) :-
-sonNecesariasParaCursar(algoritmosI,matematicaI),
-sonNecesariasParaCursar(algoritmosI,matematicaII),
-sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionI),
-sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionII),
-sonNecesariasParaCursar(algoritmosI,spd).
-
-:- end_tests(materias_necesarias_para_cursar).
-
-%7-----------------------------------------
-notaCursada(pepo,electricidadYMagnetismo,8).
-notaCursada(pepo,matematicaI,8).
-notaCursada(pepo,laboratorioDeComputacionI,8).
-
-notaCursada(pepo,laboratorioDeComputacionII, 5).
-notaCursada(pepo,matematicaII, 6).
-notaCursada(pepo,matematicaIII, 4).
-
+%7 Parte1----------------------------------
 notaFinal(pepo,matematicaII,4).
 notaFinal(pepo,laboratorioDeComputacionII,2).
 notaFinal(pepo,spd,6).
 
-%8-----------------------------------------
-:- begin_tests(pepo).
+notaCursada(pepo,electricidadYMagnetismo,8).
+notaCursada(pepo,matematicaI,8).
+notaCursada(pepo,laboratorioDeComputacionI,8).
+notaCursada(pepo,laboratorioDeComputacionII, 5).
+notaCursada(pepo,matematicaII, 6).
+notaCursada(pepo,matematicaIII, 4).
 
-test(aprobo_labo2_pepo, fail):-
-	aprobo(pepo,laboratorioDeComputacionII).
+%9 Parte2----------------------------------
+notaCursada(lescano,electricidadYMagnetismo,9).
+notaCursada(lescano,matematicaI,8).	
+notaCursada(lescano,laboratorioDeComputacionI,10).
 
-test(aprobo_mateI_pepo, nondet):-
-	aprobo(pepo,matematicaI).
+%UsuarioTest Parte2------------------------
+notaCursada(mas,laboratorioDeComputacionI,10).
+notaCursada(mas,matematicaI,8).	
+notaCursada(mas,electricidadYMagnetismo,9).		
+notaCursada(mas,matematicaII,10).
 
-test(aprobo_mateII_pepo, nondet):-
-	aprobo(pepo,matematicaII).
-
-test(aprobo_electricidad_pepo, nondet):-
-	aprobo(pepo,electricidadYMagnetismo).
-
-test(aprobo_spd_pepo, nondet):-
-	aprobo(pepo,spd).
-
-test(no_esta_al_dia_pepo, fail):-
-	estaAlDia(pepo).
-
-test(perdio_promocion_pepo, fail):-
-	perdioPromocion(pepo,_).
-
-test(bloquea_labo2_a_mate3,
-     set(Materia == [laboratorioDeComputacionII])):-
-	bloquea(pepo,matematicaIII,Materia).
-
-test(solo_puede_cursar_algoritmosI, nondet):-
-	 puedeCursar(pepo,algoritmosI).
-
-test(solo_puede_cursar_sistemasOperativos, nondet):-
-	 puedeCursar(pepo,sistemasOperativos).
-
-test(no_recurso_niguna_materia, fail):-
-	materiasRecursadas(pepo,Materia).
-
-
-	 
-:- end_tests(pepo).
-
-%------------------------------------------------------------------------
-%------------------------------------------------------------------------
-%Parte2
-%1 Futuras cursadas
+%1 Parte2----------------------------------
 puedeCursar(Estudiante,Materia):-
 	esMateria(materia(Materia,_)),
 	not(curso(Estudiante,Materia)),
@@ -257,7 +181,7 @@ esMateriaDeSegundoNivel(Materia,MateriaSegundoNivel):-
 	esCorrelativaDe(CorrelativaPrimerNivel, MateriaSegundoNivel),
 	CorrelativaPrimerNivel \= MateriaSegundoNivel.
 
-%2 Los cuatrimestres
+%2 Parte2------------------------------------------
 enQueCuatrimestreCurso(Estudiante,Materia,Cuatrimestre,Anio):-
 	fechaDeCursada(Estudiante,Materia,Cuatrimestre,Anio).
 
@@ -269,44 +193,48 @@ materiasRecursadas(Estudiante,Materia):-
 		Materia==OtraMateria,
 		momentosDistintos(Temporalidad,OtraTemporalidad,Anio,OtroAnio).
 
-momentosDistintos(Temporalidad,OtraTemporalidad,Anio,OtroAnio):-
+momentosDistintos(Temporalidad,OtraTemporalidad,_,_):-
 	Temporalidad \= OtraTemporalidad.
-momentosDistintos(Temporalidad,OtraTemporalidad,Anio,OtroAnio):-
+momentosDistintos(_,_,Anio,OtroAnio):-
 	Anio \= OtroAnio.	
 	
-%3 Reformas en el plan
+%4 Parte2------------------------------------------
 
+%Aca se repite codigo pero tengo mucho suenio 4 am  +0!!!
+cursadaCuatrimestral(Estudiante,Materia):-
+	fechaDeCursada(Estudiante,Materia,Temporalidad,Anio),
+	fechaDeCursada(Estudiante,Materia,OtraTemporalidad,OtroAnio),
+	Temporalidad \= OtraTemporalidad,
+	restriccionCuatrimestral(Temporalidad,OtraTemporalidad,Anio,OtroAnio).
+	
+	restriccionCuatrimestral(primerCuatrimestre,segundoCuatrimestre,Anio,OtroAnio):-
+	Anio == OtroAnio.
+	restriccionCuatrimestral(segundoCuatrimestre,primerCuatrimestre,Anio,OtroAnio):-
+	Anio is OtroAnio - 1.
+	
+cursadaVerano(Estudiante,Materia):-
+	fechaDeCursada(Estudiante,Materia,verano(_,_),Anio),
+	fechaDeCursada(Estudiante,Materia,verano(_,_),OtroAnio),
+	Anio is OtroAnio - 1.
 
-%4 Perfiles de estudiantes
-
-sinDescanso(Estudiante):-
+cursadaAnual(Estudiante,Materia):-
+	fechaDeCursada(Estudiante,Materia,anual,Anio),
+	fechaDeCursada(Estudiante,Materia,anual,OtroAnio),
+	Anio is OtroAnio - 1.
+	
+perfil(sinDescanso(Estudiante)):-
 	esEstudiante(Estudiante),
 	esMateria(materia(Materia,_)),
 	materiasRecursadas(Estudiante,Materia),
-	cursadaCuatrimestral(Estudiante,Materia).
+	%cursadaCuatrimestral(Estudiante,Materia),
+	%cursadaAnual(Estudiante,Materia),
+	cursadaVerano(Estudiante,Materia).
 	
-cursadaCuatrimestral(Estudiante,Materia):-
-	fechaDeCursada(Estudiante,Materia,Temporalidad,Anio).
-	fechaDeCursada(Estudiante,Materia,OtraTemporalidad,OtroAnio),
-	Temporalidad /= OtraTemporalidad.
-	restriccionCuatrimestral(Temporalidad,OtraTemporalidad,Anio,OtroAnio).
-	
-	restriccionCuatrimestral(Temporalidad,OtraTemporalidad,Anio,OtroAnio):-
-	Temporalidad == primerCuatrimestre,
-	OtraTemporalidad == segundoCuatrimestre,
-	Anio == OtroAnio.
-	restriccionCuatrimestral(Temporalidad,OtraTemporalidad,Anio,OtroAnio):-
-	Temporalidad == segundoCuatrimestre,
-	OtraTemporalidad == primerCuatrimestre,
-	Anio is OtroAnio - 1.
-
-	
-invictus(Estudiante):-
+perfil(invictus(Estudiante)):-
 	esEstudiante(Estudiante),
-	not(materiasRecursadas(Estudiante,Materia)).
-
+	not(materiasRecursadas(Estudiante,_)).
 	
-repechaje(Estudiante):-
+perfil(repechaje(Estudiante)):-
 	esEstudiante(Estudiante),
 	esMateria(materia(Materia,_)),
 	materiasRecursadas(Estudiante,Materia),
@@ -314,56 +242,149 @@ repechaje(Estudiante):-
 	fechaDeCursada(Estudiante,Materia,anual,OtroAnio),	%todas las materias anuales empiezan en el primerCuatrimestre
 	OtroAnio is Anio +1,
 	promociono(Estudiante,Materia).
-
 	
-buenasCursadas(Estudiante):-
+perfil(buenasCursadas(Estudiante)):-
 	esEstudiante(Estudiante),
 	esMateria(materia(Materia,_)),
 	forall(promocionable(Materia),promociono(Estudiante,Materia)).
+	
+perfil(seLoQueHiciseElVeranoPasado(Estudiante)):-
+	cursoTodosLosVeranos(Estudiante).
+	
+cursoTodosLosVeranos(Estudiante):-
+	esMateria(materia(Materia,_)),
+	forall(anioDeCursada(Estudiante,Anio),cursoEnVerano(Estudiante,Materia,Anio)).
+	
+cursoEnVerano(Estudiante,Materia,Anio):-
+	fechaDeCursada(Estudiante,Materia,verano(_,_),Anio).
 
-	
-seLoQueHiciseElVeranoPasado(Estudiante):-
-	empezoAcursar(Estudiante,PrimerAnio),
-	cursoTodosLosVeranos(Estudiante,Anio)
-	
-empezoAcursar(Estudiante,PrimerAnio):-
+anioDeCursada(Estudiante,Anio):-
 	curso(Estudiante,Materia),
-	fechaDeCursada(Estudiante,Materia,Temporalidad,PrimerAnio),
-	minimoAnioCursada(Estudiante,Materia,PrimerAnio).
+	fechaDeCursada(Estudiante,Materia,_,Anio).
 	
-minimoAnioCursada(Estudiante,Materia,PrimerAnio):-
-	forall(fechaDeCursada(Estudiante,Materia,Temporalidad,OtroAnio), PrimerAnio =< OtroAnio).
-
-cursoTodosLosVeranos(Estudiante,Anio)
-	forall(fechaDeCursada(Estudiante,Materia,verano(_,AnioCalendario),PrimerAnio)curso(Estudiante,Materia))
-%7-----------------------------------------
-
+%5 Parte2----------------------------------
+%tieneUnUnicoPerfil(Estudiante):-
+%	esEstudiante(Estudiante),
+%	perfil(sinDescanso(Estudiante).
+	%forall(perfil(Perfiles),perfil(sinDescanso(Estudiante))).
+	
+%7 Parte2-----------------------------------------
 %fechaDeCursada(Estudiante,Materia,Cuatrimestre,Anio).
 %fechaDeCursada(Estudiante,Materia,anual,Anio).
 %fechaDeCursada(Estudiante,Materia,verano(Mes,AnioCalendario),Anio).
-
 fechaDeCursada(pepo,electricidadYMagnetismo,primerCuatrimestre,2012).
 fechaDeCursada(pepo,matematicaI,primerCuatrimestre,2012).
 fechaDeCursada(pepo,laboratorioDeComputacionI,primerCuatrimestre,2012).
 fechaDeCursada(pepo,laboratorioDeComputacionII,segundoCuatrimestre,2012).
 fechaDeCursada(pepo,matematicaIII,anual,2013).
-
-%9------------------------------------------
+%9 Parte2------------------------------------------
 fechaDeCursada(lescano,matematicaI,primerCuatrimestre,2013).
-notaCursada(lescano,matematicaI,8).	
 fechaDeCursada(lescano,laboratorioDeComputacionI,segundoCuatrimestre,2013).
-notaCursada(lescano,laboratorioDeComputacionI,10).
 fechaDeCursada(lescano,electricidadYMagnetismo,verano(febrero,2014),2013).
-notaCursada(lescano,electricidadYMagnetismo,9).
-
-fechaDeCursada(mas,matematicaI,primerCuatrimestre,2013).
-fechaDeCursada(mas,matematicaI,segundoCuatrimestre,2013).
-notaCursada(mas,matematicaI,8).	
+%UsuarioTest Parte2------------------------------------------
+fechaDeCursada(mas,laboratorioDeComputacionI,primerCuatrimestre,2013).
 fechaDeCursada(mas,laboratorioDeComputacionI,segundoCuatrimestre,2013).
-notaCursada(mas,laboratorioDeComputacionI,10).
-fechaDeCursada(mas,electricidadYMagnetismo,verano(febrero,2014),2013).
-notaCursada(mas,electricidadYMagnetismo,9).		
+fechaDeCursada(mas,matematicaI,segundoCuatrimestre,2012).
+fechaDeCursada(mas,matematicaI,primerCuatrimestre,2013).
 fechaDeCursada(mas,matematicaII,anual,2013).	
-notaCursada(mas,matematicaII,10).
-fechaDeCursada(mas,matematicaII,anual,2014).	
-	
+fechaDeCursada(mas,matematicaII,anual,2014).
+%fechaDeCursada(mas,matematicaII,anual,2012).	
+%fechaDeCursada(mas,matematicaII,anual,2014).
+fechaDeCursada(mas,electricidadYMagnetismo,verano(febrero,2014),2013).
+fechaDeCursada(mas,electricidadYMagnetismo,verano(febrero,2015),2014).	
+
+%TESTS
+%6 Parte1----------------------------------
+:- begin_tests(materias_pesadas).
+
+	test(algoritmosI_es_materia_Pesada, nondet) :-
+		esPesada(materia(algoritmosI,160)).
+
+	test(basesDeDatos_es_materia_Pesada, nondet) :-
+		esPesada(materia(basesDeDatos,128)).
+
+	test(metodosNumericos_NO_es_materia_Pesada,fail) :-
+		esPesada(materia(metodosNumericos,80)).
+
+:- end_tests(materias_pesadas).
+
+:- begin_tests(materias_iniciales).
+
+	test(matematicaI_es_materia_inicial, nondet) :-
+		materiaInicial(matematicaI).
+
+	test(laboratorioDeComputacionI_es_materia_inicial, nondet) :-
+		materiaInicial(laboratorioDeComputacionI).
+
+	test(electricidadYMagnetismo_es_materia_inicial, nondet) :-
+		materiaInicial(electricidadYMagnetismo).
+
+:- end_tests(materias_iniciales).
+
+:- begin_tests(materias_necesarias_para_cursar).
+
+	test(algoritmosI_requiere_matematicaIyII_laboratorioIyII_spd, nondet) :-
+		sonNecesariasParaCursar(algoritmosI,matematicaI),
+		sonNecesariasParaCursar(algoritmosI,matematicaII),
+		sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionI),
+		sonNecesariasParaCursar(algoritmosI,laboratorioDeComputacionII),
+		sonNecesariasParaCursar(algoritmosI,spd).
+
+:- end_tests(materias_necesarias_para_cursar).
+
+%8 Parte1y2----------------------------------
+:- begin_tests(pepo).
+
+	test(aprobo_labo2_pepo, fail):-
+		aprobo(pepo,laboratorioDeComputacionII).
+
+	test(aprobo_mateI_pepo, nondet):-
+		aprobo(pepo,matematicaI).
+
+	test(aprobo_mateII_pepo, nondet):-
+		aprobo(pepo,matematicaII).
+
+	test(aprobo_electricidad_pepo, nondet):-
+		aprobo(pepo,electricidadYMagnetismo).
+
+	test(aprobo_spd_pepo, nondet):-
+		aprobo(pepo,spd).
+
+	test(no_esta_al_dia_pepo, fail):-
+		estaAlDia(pepo).
+
+	test(perdio_promocion_pepo, fail):-
+		perdioPromocion(pepo,_).
+
+	test(bloquea_labo2_a_mate3,
+		 set(Materia == [laboratorioDeComputacionII])):-
+		bloquea(pepo,matematicaIII,Materia).
+
+%7 Parte2----------------------------------	
+	test(solo_puede_cursar_algoritmosI, nondet):-
+		 puedeCursar(pepo,algoritmosI).
+
+	test(solo_puede_cursar_sistemasOperativos, nondet):-
+		 puedeCursar(pepo,sistemasOperativos).
+
+	test(no_recurso_niguna_materia, fail):-
+		materiasRecursadas(pepo,_).
+
+	test(invictus, nondet) :-
+		perfil(invictus(pepo)).
+
+:- end_tests(pepo).
+
+%10 Parte2---------------------------------
+:- begin_tests(pablito_lescano).
+
+	test(encaja_con_perfil_de_buenas_cursadas, nondet) :-
+		perfil(buenasCursadas(lescano)).
+
+	test(encaja_con_perfil_de_se_lo_que_hiciste_el_verano_pasado, nondet):-
+		perfil(seLoQueHiciseElVeranoPasado(lescano)).
+
+	test(invictus, nondet):-
+	perfil(invictus(lescano)).
+
+:- end_tests(pablito_lescano).
