@@ -262,6 +262,8 @@ enQueCuatrimestreCurso(Estudiante,Materia,Cuatrimestre,Anio):-
 	fechaDeCursada(Estudiante,Materia,Cuatrimestre,Anio).
 
 materiasRecursadas(Estudiante,Materia):-
+		esMateria(materia(Materia,_)),
+		esMateria(materia(OtraMateria,_)),
 		enQueCuatrimestreCurso(Estudiante,Materia,Temporalidad,Anio),
 		enQueCuatrimestreCurso(Estudiante,OtraMateria,OtraTemporalidad,OtroAnio),
 		Materia==OtraMateria,
@@ -274,12 +276,66 @@ momentosDistintos(Temporalidad,OtraTemporalidad,Anio,OtroAnio):-
 	
 %3 Reformas en el plan
 
-%pinta functores aca
 
 %4 Perfiles de estudiantes
 
+sinDescanso(Estudiante):-
+	esEstudiante(Estudiante),
+	esMateria(materia(Materia,_)),
+	materiasRecursadas(Estudiante,Materia),
+	cursadaCuatrimestral(Estudiante,Materia).
+	
+cursadaCuatrimestral(Estudiante,Materia):-
+	fechaDeCursada(Estudiante,Materia,Temporalidad,Anio).
+	fechaDeCursada(Estudiante,Materia,OtraTemporalidad,OtroAnio),
+	Temporalidad /= OtraTemporalidad.
+	restriccionCuatrimestral(Temporalidad,OtraTemporalidad,Anio,OtroAnio).
+	
+	restriccionCuatrimestral(Temporalidad,OtraTemporalidad,Anio,OtroAnio):-
+	Temporalidad == primerCuatrimestre,
+	OtraTemporalidad == segundoCuatrimestre,
+	Anio == OtroAnio.
+	restriccionCuatrimestral(Temporalidad,OtraTemporalidad,Anio,OtroAnio):-
+	Temporalidad == segundoCuatrimestre,
+	OtraTemporalidad == primerCuatrimestre,
+	Anio is OtroAnio - 1.
 
+	
+invictus(Estudiante):-
+	esEstudiante(Estudiante),
+	not(materiasRecursadas(Estudiante,Materia)).
 
+	
+repechaje(Estudiante):-
+	esEstudiante(Estudiante),
+	esMateria(materia(Materia,_)),
+	materiasRecursadas(Estudiante,Materia),
+	fechaDeCursada(Estudiante,Materia,anual,Anio),
+	fechaDeCursada(Estudiante,Materia,anual,OtroAnio),	%todas las materias anuales empiezan en el primerCuatrimestre
+	OtroAnio is Anio +1,
+	promociono(Estudiante,Materia).
+
+	
+buenasCursadas(Estudiante):-
+	esEstudiante(Estudiante),
+	esMateria(materia(Materia,_)),
+	forall(promocionable(Materia),promociono(Estudiante,Materia)).
+
+	
+seLoQueHiciseElVeranoPasado(Estudiante):-
+	empezoAcursar(Estudiante,PrimerAnio),
+	cursoTodosLosVeranos(Estudiante,Anio)
+	
+empezoAcursar(Estudiante,PrimerAnio):-
+	curso(Estudiante,Materia),
+	fechaDeCursada(Estudiante,Materia,Temporalidad,PrimerAnio),
+	minimoAnioCursada(Estudiante,Materia,PrimerAnio).
+	
+minimoAnioCursada(Estudiante,Materia,PrimerAnio):-
+	forall(fechaDeCursada(Estudiante,Materia,Temporalidad,OtroAnio), PrimerAnio =< OtroAnio).
+
+cursoTodosLosVeranos(Estudiante,Anio)
+	forall(fechaDeCursada(Estudiante,Materia,verano(_,AnioCalendario),PrimerAnio)curso(Estudiante,Materia))
 %7-----------------------------------------
 
 %fechaDeCursada(Estudiante,Materia,Cuatrimestre,Anio).
@@ -300,6 +356,14 @@ notaCursada(lescano,laboratorioDeComputacionI,10).
 fechaDeCursada(lescano,electricidadYMagnetismo,verano(febrero,2014),2013).
 notaCursada(lescano,electricidadYMagnetismo,9).
 
-		
-	
+fechaDeCursada(mas,matematicaI,primerCuatrimestre,2013).
+fechaDeCursada(mas,matematicaI,segundoCuatrimestre,2013).
+notaCursada(mas,matematicaI,8).	
+fechaDeCursada(mas,laboratorioDeComputacionI,segundoCuatrimestre,2013).
+notaCursada(mas,laboratorioDeComputacionI,10).
+fechaDeCursada(mas,electricidadYMagnetismo,verano(febrero,2014),2013).
+notaCursada(mas,electricidadYMagnetismo,9).		
+fechaDeCursada(mas,matematicaII,anual,2013).	
+notaCursada(mas,matematicaII,10).
+fechaDeCursada(mas,matematicaII,anual,2014).	
 	
