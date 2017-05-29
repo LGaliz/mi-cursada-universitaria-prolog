@@ -230,7 +230,7 @@ primerCuatrimestre(Cuatrimestre) :- 1 is Cuatrimestre.
 segundoCuatrimestre(Cuatrimestre) :- 2 is Cuatrimestre.
 
 perfil(sinDescanso,Estudiante):-
-	materiasRecursadas(Estudiante,Materia),
+	materiasRecursadas(Estudiante,_),
 	forall(materiasRecursadas(Estudiante,Materia), cursoInmediatamente(Estudiante,Materia)).
 
 perfil(invictus,Estudiante):-
