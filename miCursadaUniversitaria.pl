@@ -246,9 +246,11 @@ perfil(repechaje,Estudiante):-
 	sonInmediatas(anual(_,Anio1), cuatrimestral(Cuatrimestre2,Anio2)).
 
 perfil(buenasCursadas,Estudiante):-
+	esEstudiante(Estudiante),
 	forall(materiasPromocionablesQueCurso(Estudiante,Materia), promociono(Estudiante,Materia)).
 
 perfil(seLoQueHicisteElVeranoPasado,Estudiante):-
+	esEstudiante(Estudiante),
 	forall(anioDeCursada(Estudiante,Anio),cursoEnVerano(Estudiante,_,Anio)).
 
 materiasPromocionablesQueCurso(Estudiante,Materia) :-
