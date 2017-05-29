@@ -47,12 +47,12 @@ aprobo(Estudiante,Materia) :-
 
 %4 Parte1----------------------------------
 aproboCursada(Estudiante, Materia) :-
-	notaCursada(Estudiante, Materia, Nota),
+	notaCursada(Estudiante, Materia, Nota, _),
 	notaAprobacion(Nota).
 
 promociono(Estudiante,Materia) :-
 	promocionable(Materia),
-	notaCursada(Estudiante, Materia, Nota),
+	notaCursada(Estudiante, Materia, Nota,_),
 	notaPromocion(Nota).
 
 notaPromocion(Nota) :- Nota >= 7.
@@ -81,7 +81,7 @@ estaAlDia(Estudiante) :-
 	forall(curso(Estudiante,Materia), not(debeElFinal(Estudiante,Materia))).
 
 esEstudiante(Estudiante) :-
-	notaCursada(Estudiante,_,_).
+	notaCursada(Estudiante,_,_,_).
 
 %5 Parte1----------------------------------
 esMateria(materia(matematicaII,96)).
@@ -142,222 +142,168 @@ notaFinal(pepo,matematicaII,4).
 notaFinal(pepo,laboratorioDeComputacionII,2).
 notaFinal(pepo,spd,6).
 
-notaCursada(pepo,electricidadYMagnetismo,8).
-notaCursada(pepo,matematicaI,8).
-notaCursada(pepo,laboratorioDeComputacionI,8).
-notaCursada(pepo,laboratorioDeComputacionII, 5).
-notaCursada(pepo,matematicaII, 6).
-notaCursada(pepo,matematicaIII, 4).
+notaCursada(pepo,Materia,8,cuatrimestral(1,2012)) :- materiaInicial(Materia).
+notaCursada(pepo,laboratorioDeComputacionII, 5, cuatrimestral(2,2012)).
+notaCursada(pepo,matematicaII, 6, cuatrimestral(2,2012)).
+notaCursada(pepo,matematicaIII, 4, anual(2013)).
 
 %9 Parte2----------------------------------
-notaCursada(lescano,electricidadYMagnetismo,9).
-notaCursada(lescano,matematicaI,8).	
-notaCursada(lescano,laboratorioDeComputacionI,10).
+notaCursada(lescano,electricidadYMagnetismo,9,verano(febrero,2014)).
+notaCursada(lescano,matematicaI,8,cuatrimestral(1,2013)).
+notaCursada(lescano,laboratorioDeComputacionI,10,cuatrimestral(2,2013)).
 
 %UsuarioTest Parte2------------------------
-notaCursada(mas,laboratorioDeComputacionI,10).
-notaCursada(mas,matematicaI,8).	
-notaCursada(mas,electricidadYMagnetismo,9).		
-notaCursada(mas,matematicaII,10).
+notaCursada(mas,laboratorioDeComputacionI,3,cuatrimestral(1,2013)).
+notaCursada(mas,laboratorioDeComputacionI,4,cuatrimestral(2,2013)).
+notaCursada(mas,matematicaI,2,cuatrimestral(1,2013)).
+notaCursada(mas,matematicaI,6,cuatrimestral(2,2013)).
+notaCursada(mas,matematicaII,2,anual(_,2013)).
+notaCursada(mas,matematicaII,6,anual(_,2014)).
+notaCursada(mas,electricidadYMagnetismo,9,verano(febrero,2014)).
+notaCursada(mas,electricidadYMagnetismo,9,verano(febrero,2015)).
+notaCursada(mas,matematicaII,10,anual(_,2014)).
+notaCursada(mas,matematicaII,10,anual(_,2014)).
 
 %1 Parte2----------------------------------
+satisfaceRegimenCorrelativas(Estudiante,Materia) :-
+	cursoTodasLasMateriasNecesarias(Estudiante,Materia),
+	aproboElSegundoNivelDeCorrelativas(Estudiante,Materia).
+
 puedeCursar(Estudiante,Materia):-
 	esMateria(materia(Materia,_)),
 	not(curso(Estudiante,Materia)),
-	cursoTodasLasMateriasParaCursar(Materia,Estudiante),
-	regimenCorrelativas(Estudiante,Materia).
-	
-regimenCorrelativas(Estudiante,Materia):-
-	aprobadasComoMinimoElSegundoNivelDeCorrelativas(Materia,Estudiante).
-	
-cursoTodasLasMateriasParaCursar(Materia,Estudiante):-
-		forall(sonNecesariasParaCursar(Materia,Correlativa),curso(Estudiante,Correlativa)).
+	satisfaceRegimenCorrelativas(Estudiante,Materia).
 
-aprobadasComoMinimoElSegundoNivelDeCorrelativas(Materia,Estudiante):-
-		forall(esMateriaDeSegundoNivel(Materia, MateriaSegundoNivel),aprobo(Estudiante,MateriaSegundoNivel)).
-	
-esMateriaDeSegundoNivel(Materia,MateriaSegundoNivel):-
+cursoTodasLasMateriasNecesarias(Estudiante,Materia):-
+	forall(sonNecesariasParaCursar(Materia,Correlativa), curso(Estudiante,Correlativa)).
+
+aproboElSegundoNivelDeCorrelativas(Estudiante,Materia):-
+	forall(esCorrelativaDeSegundoNivel(Materia, CorrelativaSegundoNivel), aprobo(Estudiante, CorrelativaSegundoNivel)).
+
+esCorrelativaDeSegundoNivel(Materia,CorrelativaSegundoNivel):-
 	esCorrelativaDe(Materia, CorrelativaPrimerNivel),
-	esCorrelativaDe(CorrelativaPrimerNivel, MateriaSegundoNivel),
-	CorrelativaPrimerNivel \= MateriaSegundoNivel.
+	esCorrelativaDe(CorrelativaPrimerNivel, CorrelativaSegundoNivel).
 
 %2 Parte2------------------------------------------
 enQueCuatrimestreCurso(Estudiante,Materia,Cuatrimestre,Anio):-
-	fechaDeCursada(Estudiante,Materia,Cuatrimestre,Anio).
+	notaCursada(Estudiante,Materia,_,cuatrimestral(Cuatrimestre,Anio)).
 
-materiasRecursadas(Estudiante,Materia):-
-		esMateria(materia(Materia,_)),
-		esMateria(materia(OtraMateria,_)),
-		enQueCuatrimestreCurso(Estudiante,Materia,Temporalidad,Anio),
-		enQueCuatrimestreCurso(Estudiante,OtraMateria,OtraTemporalidad,OtroAnio),
-		Materia==OtraMateria,
-		momentosDistintos(Temporalidad,OtraTemporalidad,Anio,OtroAnio).
+materiasRecursadas(Estudiante,Materia) :-
+	notaCursada(Estudiante,Materia,_,Fecha1),
+	notaCursada(Estudiante,Materia,_,Fecha2),
+	Fecha1 \= Fecha2.
 
-momentosDistintos(Temporalidad,OtraTemporalidad,_,_):-
-	Temporalidad \= OtraTemporalidad.
-momentosDistintos(_,_,Anio,OtroAnio):-
-	Anio \= OtroAnio.	
-	
 %4 Parte2------------------------------------------
-
-esElAnioSiguiente(Anio,OtroAnio):-
+esElSiguiente(Anio,OtroAnio):-
 	Anio is OtroAnio - 1.
-	
-cursadaCuatrimestral(Estudiante,Materia):-
-	fechaDeCursada(Estudiante,Materia,Temporalidad,Anio),
-	fechaDeCursada(Estudiante,Materia,OtraTemporalidad,OtroAnio),
-	Temporalidad \= OtraTemporalidad,
-	restriccionCuatrimestral(Temporalidad,OtraTemporalidad,Anio,OtroAnio).
-	
-restriccionCuatrimestral(primerCuatrimestre,segundoCuatrimestre,Anio,OtroAnio):-
-	Anio == OtroAnio.
-restriccionCuatrimestral(segundoCuatrimestre,primerCuatrimestre,Anio,OtroAnio):-
-	esElAnioSiguiente(Anio,OtroAnio).
-	
-cursadaVerano(Estudiante,Materia):-
-	fechaDeCursada(Estudiante,Materia,verano(_,_),Anio),
-	fechaDeCursada(Estudiante,Materia,verano(_,_),OtroAnio),
-	esElAnioSiguiente(Anio,OtroAnio).
 
-cursadaAnual(Estudiante,Materia):-
-	fechaDeCursada(Estudiante,Materia,anual,Anio),
-	fechaDeCursada(Estudiante,Materia,anual,OtroAnio),
-	esElAnioSiguiente(Anio,OtroAnio).
+cursoInmediatamente(Estudiante,Materia) :-
+	notaCursada(Estudiante,Materia,_,Fecha),
+	notaCursada(Estudiante,Materia,_,Fecha2),
+	sonInmediatas(Fecha,Fecha2).
 
-restriccionSinDescanso(Estudiante,Materia):-
-	cursadaCuatrimestral(Estudiante,Materia).
-restriccionSinDescanso(Estudiante,Materia):-
-	cursadaAnual(Estudiante,Materia).
-restriccionSinDescanso(Estudiante,Materia):-	
-	cursadaVerano(Estudiante,Materia).
-	
-perfil(sinDescanso(Estudiante)):-
-	esEstudiante(Estudiante),
-	esMateria(materia(Materia,_)),
-	materiasRecursadas(Estudiante,Materia),
-	restriccionSinDescanso(Estudiante,Materia).
-	
-perfil(invictus(Estudiante)):-
+sonInmediatas(anual(_,Anio1), anual(_,Anio2)) :- esElSiguiente(Anio2,Anio1).
+
+sonInmediatas(anual(_,Anio1), cuatrimestral(Cuatrimestre2,Anio2)) :-
+	esElSiguiente(Anio1,Anio2),
+	primerCuatrimestre(Cuatrimestre2).
+
+sonInmediatas(cuatrimestral(Cuatrimestre1,Anio1), cuatrimestral(Cuatrimestre2,Anio2)) :-
+	segundoCuatrimestre(Cuatrimestre2),
+	primerCuatrimestre(Cuatrimestre1),
+	Anio1 == Anio2.
+
+sonInmediatas(cuatrimestral(Cuatrimestre1,Anio1), cuatrimestral(Cuatrimestre2,Anio2)) :-
+	segundoCuatrimestre(Cuatrimestre1),
+	primerCuatrimestre(Cuatrimestre2),
+	esElSiguiente(Anio2,Anio1).
+
+sonInmediatas(verano(_,Anio1), verano(_,Anio2)) :-
+	sonInmediatas(anual(_,Anio1), anual(_,Anio2)).
+
+sonInmediatas(verano(_,Anio1), cuatrimestral(Cuatrimestre2,Anio2)) :-
+	Anio2 == Anio1,
+	primerCuatrimestre(Cuatrimestre2).
+
+primerCuatrimestre(Cuatrimestre) :- 1 is Cuatrimestre.
+
+segundoCuatrimestre(Cuatrimestre) :- 2 is Cuatrimestre.
+
+perfil(sinDescanso,Estudiante):-
+	forall(materiasRecursadas(Estudiante,Materia), cursoInmediatamente(Estudiante,Materia)).
+
+perfil(invictus,Estudiante):-
 	esEstudiante(Estudiante),
 	not(materiasRecursadas(Estudiante,_)).
-	
-perfil(repechaje(Estudiante)):-
-	esEstudiante(Estudiante),
-	esMateria(materia(Materia,_)),
+
+perfil(repechaje,Estudiante):-
 	materiasRecursadas(Estudiante,Materia),
-	fechaDeCursada(Estudiante,Materia,anual,Anio),
-	fechaDeCursada(Estudiante,Materia,anual,OtroAnio),	%todas las materias anuales empiezan en el primerCuatrimestre
-	OtroAnio is Anio + 1,
-	promociono(Estudiante,Materia).
-	
-perfil(buenasCursadas(Estudiante)):-
-	esEstudiante(Estudiante),
-	esMateria(materia(Materia,_)),
-	forall(promocionable(Materia),promociono(Estudiante,Materia)).
-	
-perfil(seLoQueHicisteElVeranoPasado(Estudiante)):-
-	cursoTodosLosVeranos(Estudiante).
-	
-cursoTodosLosVeranos(Estudiante):-
-	esMateria(materia(Materia,_)),
-	forall(anioDeCursada(Estudiante,Anio),cursoEnVerano(Estudiante,Materia,Anio)).
-	
-cursoEnVerano(Estudiante,Materia,Anio):-
-	fechaDeCursada(Estudiante,Materia,verano(_,_),Anio).
+	notaCursada(Estudiante,Materia,_,cuatrimestral(Cuatrimestre2,Anio2)),
+	promociono(Estudiante,Materia),
+	notaCursada(Estudiante,Materia,Nota,anual(_,Anio1)),
+	not(notaAprobacion(Nota)),
+	sonInmediatas(anual(_,Anio1), cuatrimestral(Cuatrimestre2,Anio2)).
+
+perfil(buenasCursadas,Estudiante):-
+	forall(materiasPromocionablesQueCurso(Estudiante,Materia), promociono(Estudiante,Materia)).
+
+perfil(seLoQueHicisteElVeranoPasado,Estudiante):-
+	forall(anioDeCursada(Estudiante,Anio),cursoEnVerano(Estudiante,_,Anio)).
+
+materiasPromocionablesQueCurso(Estudiante,Materia) :-
+	notaCursada(Estudiante,Materia,_,_),
+	promocionable(Materia).
+
+cursoEnVerano(Estudiante,_,Anio):-
+	AnioLectivo is Anio + 1,
+	notaCursada(Estudiante,_,_,verano(_,AnioLectivo)).
 
 anioDeCursada(Estudiante,Anio):-
-	curso(Estudiante,Materia),
-	fechaDeCursada(Estudiante,Materia,_,Anio).
-	
-%5 Parte2----------------------------------
+	notaCursada(Estudiante,_,_,Fecha),
+	anio(Fecha, Anio).
+
+anio(cuatrimestral(_,Anio),Anio).
+anio(anual(_,Anio),Anio).
+anio(verano(_,Anio), Anio2) :- Anio2 is Anio - 1.
+
+%5 (BONUS) Parte2----------------------------------
 tieneUnUnicoPerfil(Estudiante):-
-	esEstudiante(Estudiante),
-	restriccionPerfil(Estudiante).
-	
-restriccionPerfil(Estudiante):-
-	forall(perfil(TipoPerfil), TipoPerfil == perfil(sinDescanso(Estudiante))).
-restriccionPerfil(Estudiante):-
-	forall(perfil(TipoPerfil), TipoPerfil == perfil(invictus(Estudiante))).
-restriccionPerfil(Estudiante):-
-	forall(perfil(TipoPerfil), TipoPerfil == perfil(buenasCursadas(Estudiante))).
-restriccionPerfil(Estudiante):-
-	forall(perfil(TipoPerfil), TipoPerfil == perfil(seLoQueHicisteElVeranoPasado(Estudiante))).
+	not(tieneMasDeUnPerfil(Estudiante)).
+
+tieneMasDeUnPerfil(Estudiante) :-
+	perfil(UnPerfil,Estudiante),
+	perfil(OtroPerfil,Estudiante),
+	UnPerfil \= OtroPerfil.
 
 %6 Parte2----------------------------------
 
-indiceDeDesempenioAcademico(Estudiante,Materia,Indice):-
-	esMateria(materia(Materia,_)),
-	restriccionDesempenio(Estudiante,Materia,Indice).
-	
-restriccionDesempenio(Estudiante,Materia,Indice):-	
-	anuales(Estudiante,Materia,Indice).
-restriccionDesempenio(Estudiante,Materia,Indice):-	
-	cuatrimestral(Estudiante,Materia,Indice).
-restriccionDesempenio(Estudiante,Materia,Indice):-	
-	deVerano(Estudiante,Materia,Indice).
-	
-anuales(Estudiante,Materia,Indice):-
-	fechaDeCursada(Estudiante,Materia,anual,_),
-	notaCursada(Estudiante,Materia,Indice).
+indiceDeDesempenioAcademico(Estudiante,Materia,Indice) :-
+	notaCursada(Estudiante,Materia,Nota,cuatrimestral(Cuatrimestre,_)),
+	Indice is Nota - Cuatrimestre.
 
-cuatrimestral(Estudiante,Materia,Indice):-
-	fechaDeCursada(Estudiante,Materia,segundoCuatrimestre,_),
-	notaCursada(Estudiante,Materia,Nota),
-	Indice is Nota - 2.
-cuatrimestral(Estudiante,Materia,Indice):-
-	fechaDeCursada(Estudiante,Materia,primerCuatrimestre,_),
-	not(fechaDeCursada(Estudiante,Materia,segundoCuatrimestre,_)),
-	notaCursada(Estudiante,Materia,Nota),
-	Indice is Nota - 1.
+indiceDeDesempenioAcademico(Estudiante,Materia,Indice) :-
+	notaCursada(Estudiante,Materia,Nota,anual(_,_)),
+	Indice is Nota.
 
-deVerano(Estudiante,Materia,Indice):-
-	fechaDeCursada(Estudiante,Materia,verano(Mes,AnioCalendario),_),
-	notaCursada(Estudiante,Materia,Nota),
-	not(restriccionDeVerano(Mes,AnioCalendario)),
+indiceDeDesempenioAcademico(Estudiante,Materia,Indice) :-
+	notaCursada(Estudiante,Materia,Nota,verano(Mes,Anio)),
+	not(restriccionDeVerano(Mes,Anio)),
 	Indice is Nota / 2.
 
-deVerano(Estudiante,Materia,Indice):-
-	fechaDeCursada(Estudiante,Materia,verano(Mes,AnioCalendario),_),
-	notaCursada(Estudiante,Materia,Nota),
-	restriccionDeVerano(Mes,AnioCalendario),
+indiceDeDesempenioAcademico(Estudiante,Materia,Indice) :-
+	notaCursada(Estudiante,Materia,Nota,verano(Mes,Anio)),
+	restriccionDeVerano(Mes,Anio),
 	Indice is Nota.
-	
+
 restriccionDeVerano(Mes,AnioCalendario):-
 	letrasDelMes(Mes,Cantidad),
 	esPar(AnioCalendario + Cantidad).
 
-esPar(Numero):-
+esPar(Numero) :-
 	0 is mod(Numero,2).
-	
+
 letrasDelMes(Mes,Cantidad):-
 	atom_length(Mes,Cantidad).
-	
-	
-%7 Parte2-----------------------------------------
-%fechaDeCursada(Estudiante,Materia,Cuatrimestre,Anio).
-%fechaDeCursada(Estudiante,Materia,anual,Anio).
-%fechaDeCursada(Estudiante,Materia,verano(Mes,AnioCalendario),Anio).
-fechaDeCursada(pepo,electricidadYMagnetismo,primerCuatrimestre,2012).
-fechaDeCursada(pepo,matematicaI,primerCuatrimestre,2012).
-fechaDeCursada(pepo,laboratorioDeComputacionI,primerCuatrimestre,2012).
-fechaDeCursada(pepo,laboratorioDeComputacionII,segundoCuatrimestre,2012).
-fechaDeCursada(pepo,matematicaII,segundoCuatrimestre,2012).
-fechaDeCursada(pepo,matematicaIII,anual,2013).
-%9 Parte2------------------------------------------
-fechaDeCursada(lescano,matematicaI,primerCuatrimestre,2013).
-fechaDeCursada(lescano,laboratorioDeComputacionI,segundoCuatrimestre,2013).
-fechaDeCursada(lescano,electricidadYMagnetismo,verano(febrero,2014),2013).
-%UsuarioTest Parte2------------------------------------------
-fechaDeCursada(mas,laboratorioDeComputacionI,primerCuatrimestre,2013).
-fechaDeCursada(mas,laboratorioDeComputacionI,segundoCuatrimestre,2013).
-fechaDeCursada(mas,matematicaI,segundoCuatrimestre,2012).
-fechaDeCursada(mas,matematicaI,primerCuatrimestre,2013).
-fechaDeCursada(mas,matematicaII,anual,2013).	
-fechaDeCursada(mas,matematicaII,anual,2014).
-%fechaDeCursada(mas,matematicaII,anual,2012).	
-%fechaDeCursada(mas,matematicaII,anual,2014).
-fechaDeCursada(mas,electricidadYMagnetismo,verano(febrero,2014),2013).
-fechaDeCursada(mas,electricidadYMagnetismo,verano(febrero,2015),2014).	
 
 %TESTS CASOS DE PRUEBA
 %6 Parte1----------------------------------
@@ -425,38 +371,45 @@ fechaDeCursada(mas,electricidadYMagnetismo,verano(febrero,2015),2014).
 	test(bloquea_labo2_a_mate3,
 		 set(Materia == [laboratorioDeComputacionII])):-
 		bloquea(pepo,matematicaIII,Materia).
+:- end_tests(pepo).
 
-%8 Parte2----------------------------------	
-	test(solo_puede_cursar_algoritmosI, nondet):-
-		 puedeCursar(pepo,algoritmosI).
+%8 Parte2----------------------------------
+:- begin_tests(pepo_parte2).
 
-	test(solo_puede_cursar_sistemasOperativos, nondet):-
-		 puedeCursar(pepo,sistemasOperativos).
+	test(solo_puede_cursar_algoritmosI_y_sistemas_operativos,
+		 set(Materia == [algoritmosI,sistemasOperativos])):-
+		 puedeCursar(pepo,Materia).
 
 	test(no_recurso_niguna_materia, fail):-
 		materiasRecursadas(pepo,_).
-		
-%10 Parte2----------------------------------	
-	test(invictus, nondet) :-
-		perfil(invictus(pepo)).
-	
+
+%9 Parte2----------------------------------
 	test(valoracion_laboratorioDeComputacionII_es_3, nondet) :-
-		indiceDeDesempenioAcademico(pepo,laboratorioDeComputacionII,3).	
+		indiceDeDesempenioAcademico(pepo,laboratorioDeComputacionII,3).
 
-:- end_tests(pepo).
+:- end_tests(pepo_parte2).
 
-:- begin_tests(pablito_lescano).
+:- begin_tests(perfiles_pablito_lescano).
 
-	test(encaja_con_perfil_de_buenas_cursadas, nondet) :-
-		perfil(buenasCursadas(lescano)).
+        test(encaja_con_perfil_de_buenas_cursadas_y_se_lo_que_hiciste_el_verano_pasado,
+     	 set(Perfil == [buenasCursadas,seLoQueHicisteElVeranoPasado]), nondet):-
+		perfil(Perfil,lescano).
 
-	test(encaja_con_perfil_de_se_lo_que_hiciste_el_verano_pasado, nondet):-
-		perfil(seLoQueHicisteElVeranoPasado(lescano)).
+:- end_tests(perfiles_pablito_lescano).
 
-	test(invictus, nondet):-
-		perfil(invictus(lescano)).
-	
+:- begin_tests(estudiantes_invictus).
+
+        test(invictus, set(Estudiante == [pepo,lescano])):- perfil(invictus,Estudiante).
+
+:- end_tests(estudiantes_invictus).
+
+:- begin_tests(indices_de_valoracion).
+
 	test(valoracion_electricidadYMagnetismo_es_4yMedio, nondet) :-
-		indiceDeDesempenioAcademico(lescano,electricidadYMagnetismo,4.5).	
+		indiceDeDesempenioAcademico(lescano,electricidadYMagnetismo,4.5).
 
-:- end_tests(pablito_lescano).
+        test(valoracion_laboII_pepo, nondet) :-
+		indiceDeDesempenioAcademico(pepo,laboratorioDeComputacionII,3).
+
+
+:- end_tests(indices_de_valoracion).
