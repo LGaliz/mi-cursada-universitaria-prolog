@@ -230,6 +230,7 @@ primerCuatrimestre(Cuatrimestre) :- 1 is Cuatrimestre.
 segundoCuatrimestre(Cuatrimestre) :- 2 is Cuatrimestre.
 
 perfil(sinDescanso,Estudiante):-
+	materiasRecursadas(Estudiante,Materia),
 	forall(materiasRecursadas(Estudiante,Materia), cursoInmediatamente(Estudiante,Materia)).
 
 perfil(invictus,Estudiante):-
@@ -407,6 +408,5 @@ letrasDelMes(Mes,Cantidad):-
 
         test(valoracion_laboII_pepo, nondet) :-
 		indiceDeDesempenioAcademico(pepo,laboratorioDeComputacionII,3).
-
 
 :- end_tests(indices_de_valoracion).
