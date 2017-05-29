@@ -383,11 +383,8 @@ letrasDelMes(Mes,Cantidad):-
 	test(no_recurso_niguna_materia, fail):-
 		materiasRecursadas(pepo,_).
 
-%9 Parte2----------------------------------
-	test(valoracion_laboratorioDeComputacionII_es_3, nondet) :-
-		indiceDeDesempenioAcademico(pepo,laboratorioDeComputacionII,3).
-
 :- end_tests(pepo_parte2).
+%9 Parte2----------------------------------
 
 :- begin_tests(perfiles_pablito_lescano).
 
